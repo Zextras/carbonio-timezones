@@ -5,7 +5,8 @@ pipeline {
         }
     }
     parameters {
-        booleanParam defaultValue: false, description: 'Whether to upload the packages in playground repositories', name: 'PLAYGROUND'
+        booleanParam defaultValue: false, description: 'Whether to upload the packages in playground repositories',
+        name: 'PLAYGROUND'
     }
     environment {
         JAVA_OPTS="-Dfile.encoding=UTF8"
@@ -71,17 +72,17 @@ pipeline {
                                 }
                             }
                         }
-                        stage('Centos 8') {
+                        stage('Rocky 8') {
                             agent {
                                 node {
-                                    label 'pacur-agent-centos-8-v1'
+                                    label 'pacur-agent-rocky-8-v1'
                                 }
                             }
                             steps {
                                 unstash 'staging'
                                 sh 'cp -r staging /tmp'                                
-                                sh 'sudo pacur build centos /tmp/staging/package'
-                                stash includes: 'artifacts/', name: 'artifacts-centos-8'
+                                sh 'sudo pacur build rocky /tmp/staging/package'
+                                stash includes: 'artifacts/', name: 'artifacts-rocky-8'
                             }
                             post {
                                 always {
@@ -103,7 +104,7 @@ pipeline {
             steps {
                 unstash 'artifacts-ubuntu-bionic'
                 unstash 'artifacts-ubuntu-focal'
-                unstash 'artifacts-centos-8'
+                unstash 'artifacts-rocky-8'
                 script {
                     def server = Artifactory.server 'zextras-artifactory'
                     def buildInfo
